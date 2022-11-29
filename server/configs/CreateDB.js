@@ -1,5 +1,5 @@
-const mysql = require('mysql');
-const connection = mysql.createConnection({
+var mysql = require('mysql');
+var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
@@ -7,42 +7,44 @@ const connection = mysql.createConnection({
 });
 
 connection.connect(function(err) {
-    
     if (err) {
         console.log(err.message);
     } else {
         console.log("Connected to MySQL!");
     }
-    
+});
 
-    let createDB = "CREATE DATABASE IF NOT EXISTS hw5DB"
-    connection.query(createDB, function (err, result) {
-        if (err) {
-            console.log(err.message);
+connection.query('DROP DATABASE IF EXISTS hw5DB', 
+    function (error, results, fields) {
+        if (error) {
+            throw error;
+        } else {
+            console.log("Previous database dropped if existed.");
+        }
+
+    }
+);
+
+connection.query('CREATE DATABASE hw5DB', 
+    function (error, results, fields) {
+        if (error) {
+            throw error;
         } else {
             console.log("Database created.");
         }
-    });
+   }
+);
 
-    connection.end(function(err) {
-        if (err) {
-            return console.log(err.message);
+connection.query('USE hw5DB', 
+    function (error, results, fields) {
+        if (error) {
+            throw error;
         } else {
-            console.log("MySQL connection ended.");
+            console.log("Using database hw5DB.");
         }
-    });
+    }
+);
 
-});
-
-const db_con = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    port: 8889,
-    database: 'hw5DB'
-});
-
-console.log("Database connection created.");
 
 let createUserTable = `CREATE TABLE IF NOT EXISTS User (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -50,37 +52,41 @@ let createUserTable = `CREATE TABLE IF NOT EXISTS User (
     lastname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL
     )`;
-db_con.query(createUserTable, function(err, results, fields) {
-    if (err) {
-        console.log(err.message);
-    } else {
-        console.log("User table created.");
+connection.query(createUserTable,
+    function (error, results, fields) {
+        if (error) {
+            throw error;
+        } else {
+            console.log("User table created.");
+        }
     }
-});
+);
 
 
 let createQuizAnswerTable = `CREATE TABLE IF NOT EXISTS QuizAnswer (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    q1 INT NOT NULL,
-    q2 INT NOT NULL,
-    q3 INT NOT NULL,
-    q4 INT NOT NULL,
-    q5 INT NOT NULL,
-    q6 INT NOT NULL,
-    q7 INT NOT NULL,
-    q8 INT NOT NULL,
-    q9 INT NOT NULL,
-    q10 INT NOT NULL,
+    q1 FLOAT NOT NULL,
+    q2 FLOAT NOT NULL,
+    q3 FLOAT NOT NULL,
+    q4 FLOAT NOT NULL,
+    q5 FLOAT NOT NULL,
+    q6 FLOAT NOT NULL,
+    q7 FLOAT NOT NULL,
+    q8 FLOAT NOT NULL,
+    q9 FLOAT NOT NULL,
+    q10 FLOAT NOT NULL,
     CONSTRAINT FK_UserQuizAnswer FOREIGN KEY (user_id) REFERENCES User(id)
     )`;
-db_con.query(createQuizAnswerTable, function(err, results, fields) {
-    if (err) {
-        console.log(err.message);
-    } else {
-        console.log("QuizAnswer table created.");
+connection.query(createQuizAnswerTable,
+    function (error, results, fields) {
+        if (error) {
+            throw error;
+        } else {
+            console.log("QuizAnswer table created.");
+        }
     }
-});
+);
 
 
 let createUsersViewedTable = `CREATE TABLE IF NOT EXISTS UsersViewed (
@@ -89,19 +95,21 @@ let createUsersViewedTable = `CREATE TABLE IF NOT EXISTS UsersViewed (
     secondary_user_id INT NOT NULL,
     CONSTRAINT FK_PrimaryUserViewed FOREIGN KEY (primary_user_id) REFERENCES User(id)
     )`;
-db_con.query(createUsersViewedTable, function(err, results, fields) {
-    if (err) {
-        console.log(err.message);
-    } else {
-        console.log("UsersViewed table created.");
+connection.query(createUsersViewedTable,
+    function (error, results, fields) {
+        if (error) {
+            throw error;
+        } else {
+            console.log("UsersViewed table created.");
+        }
     }
-});
+);
 
 
-db_con.end(function(err) {
+connection.end(function(err) {
     if (err) {
-        return console.log(err.message);
+        throw error;
     } else {
-        console.log("Database connection ended.");
+        console.log("Connection ended!");
     }
 });
