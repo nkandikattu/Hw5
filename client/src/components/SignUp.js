@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
+import { Button, Avatar, Container, Grid, Paper, Typography, TextField } from '@mui/material';
 function SignUp(){
-    
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [emailId, setEmailId] = useState("");
@@ -17,6 +18,91 @@ function SignUp(){
             console.log(response)
         })
     }
+    return(
+        <div>
+            <Container maxWidth="sm">
+                <Grid
+                    container
+                    spacing={2}
+                    direction='column'
+                    justifyContent='center'
+                    style={{minHeight: '100vh'}}
+                >
+                <Paper elevation={2} sx={{padding: 5}}>
+                <Grid container direction='column' spacing={2}>
+                <Grid align='center'>
+                <Avatar>
+
+                </Avatar>
+                <h2>
+                    Sign Up
+                </h2>
+                <Typography variant='caption'>Please fill the form to create an account</Typography>
+                </Grid>
+                <Grid item>
+		            <TextField
+			            type="name"
+			            fullWidth
+			            label="Enter your First Name"
+			            placeholder="First Name"
+			            variant="outlined"
+			            required
+                        onChange={(e)=>{
+                            setFirstName(e.target.value)
+                        }}
+		            />
+	            </Grid>
+                <Grid item>
+		            <TextField
+			            type="name"
+			            fullWidth
+			            label="Enter your Last Name"
+			            placeholder="Last Name"
+			            variant="outlined"
+			            required
+                        onChange={(e)=>{
+                            setLastName(e.target.value)
+                        }}
+		            />
+	            </Grid>
+                <Grid item>
+		            <TextField
+			            type="name"
+			            fullWidth
+			            label="Enter your Email Id"
+			            placeholder="Email Id"
+			            variant="outlined"
+			            required
+                        onChange={(e)=>{
+                            setEmailId(e.target.value)
+                        }}
+		            />
+	            </Grid>
+                <Grid item>
+		            <TextField
+			            type="password"
+			            fullWidth
+			            label="Enter your Password"
+			            placeholder="Password"
+			            variant="outlined"
+			            required
+                        onChange={(e)=>{
+                            setPassword(e.target.value)
+                        }}
+		            />
+	            </Grid>
+                <Grid item>
+	            <Button type="submit" fullWidth variant="contained" onClick={signup}>
+		        Sign Up
+	            </Button>
+	            </Grid>
+                </Grid>
+                </Paper>
+                </Grid>
+            </Container>
+        </div>
+    )
+    /*
     return (
         <div>
             <label>First Name:</label>
@@ -38,5 +124,6 @@ function SignUp(){
             <button onClick={signup}>SignUp</button>
         </div>
     )
+    */
 }
 export default SignUp;
