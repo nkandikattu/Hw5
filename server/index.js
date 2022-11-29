@@ -1,11 +1,23 @@
 var config = require('./configs/Config.js');
 
 const express = require('express');
+const cors = require('cors');
 const app = express();
+const db = require('./configs/Database2')
+app.use(express.json())
+app.use(cors())
 
 app.get('/', (req, res) => {
     res.send("homepage for server")
 });
+
+app.post("/signup", (req, res)=>{
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const emailid = req.body.emailid;
+    const password = req.body.password;
+    db.addUser(firstname, lastname, emailid, password);
+})
 
 app.get("/users/:id", async (req, res) => {
     const id = req.params.id
