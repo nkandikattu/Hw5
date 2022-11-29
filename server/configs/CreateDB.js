@@ -50,7 +50,8 @@ let createUserTable = `CREATE TABLE IF NOT EXISTS User (
     id INT PRIMARY KEY AUTO_INCREMENT,
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(225) NOT NULL
     )`;
 connection.query(createUserTable,
     function (error, results, fields) {
