@@ -10,14 +10,30 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import Axios from 'axios'
+import {useNavigate} from 'react-router-dom';
 
 
 function Login(){
+    let navigate = useNavigate();
+
+    const [email, setEmailId] = useState("");
+    const [password, setPassword] = useState("");
     const [values, setValues] = useState({
         email: "",
-        password: "",
+        pass: "",
         showPass: false,
     });
+
+    const checkCreds = ()=>{
+        Axios.post("http://localhost:8888/login", {email: email, password: password})
+        .then((response)=>{
+            console.log(response.data);
+            if(response.data.message != "login failed"){
+                navigate("/");
+            }
+        })
+    }
     const handlePassVisibility = ()=>{
         setValues(
             {
@@ -48,6 +64,9 @@ function Login(){
 			placeholder="Email Address"
 			variant="outlined"
 			required
+            onChange={(event)=>{
+                setEmailId(event.target.value)
+            }}
 		/>
 	</Grid>
 
@@ -59,6 +78,9 @@ function Login(){
 		placeholder="Password"
 		variant="outlined"
 		required
+        onChange={(event)=>{
+            setPassword(event.target.value)
+        }}
 		InputProps={{
 			endAdornment: (
 				<InputAdornment position="end">
@@ -76,7 +98,7 @@ function Login(){
 	</Grid>
 
 	<Grid item>
-	<Button type="submit" fullWidth variant="contained">
+	<Button type="submit" fullWidth variant="contained" onClick={checkCreds}>
 		Sign In
 	</Button>
 	</Grid>

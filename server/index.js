@@ -7,6 +7,15 @@ const db = require('./configs/Database2')
 app.use(express.json())
 app.use(cors())
 
+const mysql = require('mysql')
+
+const db2 = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    database: 'hw5DB'
+})
+
 app.get('/', (req, res) => {
     res.send("homepage for server")
 });
@@ -17,6 +26,31 @@ app.post("/signup", (req, res)=>{
     const emailid = req.body.emailid;
     const password = req.body.password;
     db.addUser(firstname, lastname, emailid, password);
+})
+
+app.post("/login", (req, res)=>{
+    const email = req.body.email;
+    const password = req.body.password;
+    db2.query(
+        "select * from user where email=?",
+        [email],
+        (err, result)=>{
+            console.log(result)
+            if(err){
+                res.send({err:err})
+            }
+            else{
+                if(result.length > 0 ){
+                    if(result[0].password ==  password){
+                        res.send({message: "login success"});
+                    }
+                    else{
+                        res.send({message: "login failed"});
+                    }
+                }
+            }
+        }
+    )
 })
 
 app.get("/users/:id", async (req, res) => {
