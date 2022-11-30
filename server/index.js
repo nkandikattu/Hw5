@@ -7,6 +7,8 @@ const db = require('./configs/Database2')
 app.use(express.json())
 app.use(cors())
 
+const jwt = require('jsonwebtoken')
+
 const mysql = require('mysql')
 
 const db2 = mysql.createConnection({
@@ -27,6 +29,35 @@ app.post("/signup", (req, res)=>{
     const password = req.body.password;
     db.addUser(firstname, lastname, emailid, password);
 })
+const verifyJWT = (req, res, next)=>{
+    const token = req.headers["x-access-token"]
+    if(!token){
+        res.json({
+            loggedin: false,
+            message: "no token found"
+        })
+    }
+    else{
+        jwt.verify(token, "jwtSecret", (err, decoded)=>{
+            if(err){
+                res.json({
+                    loggedin: false,
+                    message: "failed to authenticate"
+                })
+            }
+            else{
+                req.userId = decoded.id;
+                next();
+            }
+        })
+    }
+}
+
+app.get("/isLoggedIn", verifyJWT, (req, res)=>{
+    res.json({
+        loggedin: true
+    })
+})
 
 app.post("/login", (req, res)=>{
     const email = req.body.email;
@@ -37,15 +68,30 @@ app.post("/login", (req, res)=>{
         (err, result)=>{
             console.log(result)
             if(err){
-                res.send({err:err})
+                res.json({
+                    auth: false,
+                    message: "error finding user"
+                })
             }
             else{
                 if(result.length > 0 ){
                     if(result[0].password ==  password){
-                        res.send({message: "login success"});
+                        const id = result[0].id
+                        const token = jwt.sign({id}, "jwtSecret", {
+                            expiresIn: 600,
+                        })
+                        
+                       res.json({
+                        auth: true,
+                        token: token,
+                        result: result
+                       })
                     }
                     else{
-                        res.send({message: "login failed"});
+                        res.json({
+                            auth: false,
+                            message: "no user found"
+                        })
                     }
                 }
             }

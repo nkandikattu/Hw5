@@ -1,4 +1,4 @@
-import React,{ useState }  from 'react';
+import React,{ useEffect, useState }  from 'react';
 import {
 	Container,
 	Button,
@@ -15,8 +15,21 @@ import {useNavigate} from 'react-router-dom';
 
 
 function Login(){
-    let navigate = useNavigate();
+	useEffect(()=>{
+		Axios.get("http://localhost:8888/isLoggedIn", {
+			headers:{
+				"x-access-token": localStorage.getItem("token")
+			}
+		}).then((response)=>{
+			console.log(response)
+			if(response.data.loggedin){
+				navigate("/")
+			}
+		})
+	}
 
+	)
+    let navigate = useNavigate();
     const [email, setEmailId] = useState("");
     const [password, setPassword] = useState("");
     const [values, setValues] = useState({
@@ -24,13 +37,13 @@ function Login(){
         pass: "",
         showPass: false,
     });
-
     const checkCreds = ()=>{
         Axios.post("http://localhost:8888/login", {email: email, password: password})
         .then((response)=>{
             console.log(response.data);
-            if(response.data.message != "login failed"){
-                navigate("/");
+            if(response.data.auth){
+				localStorage.setItem("token", response.data.token)
+				navigate("/")
             }
         })
     }
