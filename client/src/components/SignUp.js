@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 import { Button, Avatar, Container, Grid, Paper, Typography, TextField } from '@mui/material';
 function SignUp(){
-
+    let navigate = useNavigate();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [emailId, setEmailId] = useState("");
@@ -17,6 +18,7 @@ function SignUp(){
         }).then((response)=>{
             console.log(response)
         })
+        navigate("/login");
     }
     return(
         <div>
