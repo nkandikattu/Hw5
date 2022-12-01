@@ -1,4 +1,4 @@
 var config = {
-    port: '8888'
+    port: '5000'
 }
 module.exports = config;

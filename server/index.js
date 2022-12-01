@@ -4,12 +4,15 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const db = require('./configs/Database2')
+const router = express.Router();
 app.use(express.json())
 app.use(cors())
 
 const jwt = require('jsonwebtoken')
 
 const mysql = require('mysql')
+const mysql = require('mysql');
+
 
 const db2 = mysql.createConnection({
     host: 'localhost',
@@ -21,6 +24,93 @@ const db2 = mysql.createConnection({
 app.get('/', (req, res) => {
     res.send("homepage for server")
 });
+
+
+app.get("/moreLikeThis", async(req,res)=>{
+    current_user_id = req.query.current_user_id;
+    matched_user_id = req.query.matched_user_id;
+    currentUserVector = await db.getUserVector(current_user_id);
+    matchedUserVector = await db.getUserVector(matched_user_id);
+    q=[];
+    q.push(currentUserVector.q1 + 0.1*matchedUserVector.q1)
+    q.push(currentUserVector.q2 + 0.1*matchedUserVector.q2)
+    q.push(currentUserVector.q3 + 0.1*matchedUserVector.q3)
+    q.push(currentUserVector.q4 + 0.1*matchedUserVector.q4)
+    q.push(currentUserVector.q5 + 0.1*matchedUserVector.q5)
+    q.push(currentUserVector.q6 + 0.1*matchedUserVector.q6)
+    q.push(currentUserVector.q7 + 0.1*matchedUserVector.q7)
+    q.push(currentUserVector.q8 + 0.1*matchedUserVector.q8)
+    q.push(currentUserVector.q9 + 0.1*matchedUserVector.q9)
+    q.push(currentUserVector.q10 + 0.1*matchedUserVector.q10)
+    
+    q = normaliseVector(q);
+    var updateVector = await db.updateUserVector(current_user_id, q)
+    res.send(updateVector);
+
+})
+app.get("/lessLikeThis", async(req,res)=>{
+    current_user_id = req.query.current_user_id;
+    matched_user_id = req.query.matched_user_id;
+    currentUserVector = await db.getUserVector(current_user_id);
+    matchedUserVector = await db.getUserVector(matched_user_id);
+    q=[];
+    q.push(currentUserVector.q1 - 0.1*matchedUserVector.q1)
+    q.push(currentUserVector.q2 - 0.1*matchedUserVector.q2)
+    q.push(currentUserVector.q3 - 0.1*matchedUserVector.q3)
+    q.push(currentUserVector.q4 - 0.1*matchedUserVector.q4)
+    q.push(currentUserVector.q5 - 0.1*matchedUserVector.q5)
+    q.push(currentUserVector.q6 - 0.1*matchedUserVector.q6)
+    q.push(currentUserVector.q7 - 0.1*matchedUserVector.q7)
+    q.push(currentUserVector.q8 - 0.1*matchedUserVector.q8)
+    q.push(currentUserVector.q9 - 0.1*matchedUserVector.q9)
+    q.push(currentUserVector.q10 - 0.1*matchedUserVector.q10)
+    
+    q = normaliseVector(q);
+    var updateVector = await db.updateUserVector(current_user_id, q)
+    res.send(updateVector);
+
+})
+app.get("/reset", async(req,res)=>{
+    //When no matches remain, reset all the matches for the current user. i.e. delete all entries from the matched table/
+    current_user_id = req.query.id;
+    var delUsers = await db.resetUser(current_user_id);
+    res.send(delUsers);
+
+})
+
+ app.get("/refineDate", async(req,res,next)=>{
+    var matchedUserInfo;
+    current_user_id = req.query.id;
+    // get the ids of all the users that have already been matched with the current user
+    var matchedUsersResult = await db.getMatchedUsers(current_user_id);
+    
+    otherUsersResult = await db.getOtherUsers(matchedUsersResult,current_user_id); //vectors of potential matches excluding self and already matched users
+    if(otherUsersResult.length <=0)
+    {
+        res.send(matchedUserInfo); //no matches left.
+    }
+    currentUserVector = await db.getUserVector(current_user_id);    // get current user's vector
+    console.log(currentUserVector)
+
+    var minDist = Number.MAX_VALUE;;
+    var matchedId;
+    //for every potential match, find bestpossible match i.e. min euclidian distance and add this match to table.
+        otherUsersResult.forEach(element => {
+        var dist = getEuclidianDistance(element, currentUserVector) ;
+        console.log(dist)
+        if(dist<=minDist){
+            minDist = dist;
+            matchedId = element.user_id;
+            console.log(`Matched id: ${matchedId}`)
+        }
+    });
+    if(matchedId!=null){ //we got some match, add this to the db and return user info.
+        matchedUserInfo = await db.getUser(matchedId);
+        await db.addUserMatch(current_user_id, matchedId);
+    }
+    res.send(matchedUserInfo);
+})
+
 
 app.post("/signup", (req, res)=>{
     const firstname = req.body.firstname;
@@ -122,28 +212,31 @@ app.post("/login", (req, res)=>{
     )
 })
 
-app.get("/users/:id", async (req, res) => {
-    const id = req.params.id
-    const users = await getUsers(id)
-    res.send(users)
-  })
-
-app.get("/users", async (req, res) => {
-    const users = await getAllUsers()
-    res.send(users)
-  })
 
 app.listen(config.port, () => {
     console.log('Server running on port ' + config.port);
 });
 
-user_distances=(users)=>{
-    normalised_vector = new Map();
-    users.array.forEach(element => {
-        sum_of_squares = Math.pow(element.q1,2)+ Math.pow(element.q2,2)+Math.pow(element.q3,2)
-        Math.pow(element.q4,2)+Math.pow(element.q5,2)+Math.pow(element.q6,2)+Math.pow(element.q7,2)+Math.pow(element.q8,2)+Math.pow(element.q9,2)
-        +Math.pow(element.q10,2)
-    sq_rt = Math.sqrt(sum_of_squares)
-        
-    });
+
+function normaliseVector(q) {
+    var modq = Math.sqrt(q[0] * q[0]) + (q[1] * q[1]) + (q[2] * q[2]) + (q[3] * q[3])
+        + (q[4] * q[4]) + (q[5] * q[5]) + (q[6] * q[6]) + (q[7] * q[7]) + (q[8] * q[8]) + (q[9] * q[9]);
+    q[0] = q[0] / modq;
+    q[1] = q[1] / modq;
+    q[2] = q[2] / modq;
+    q[3] = q[3] / modq;
+    q[4] = q[4] / modq;
+    q[5] = q[5] / modq;
+    q[6] = q[6] / modq;
+    q[7] = q[7] / modq;
+    q[8] = q[8] / modq;
+    q[9] = q[9] / modq;
+    return q;
+}
+
+function getEuclidianDistance(element, currentUserVector) {
+    return Math.sqrt(Math.pow((element.q1 - currentUserVector.q1), 2) + Math.pow((element.q2 - currentUserVector.q2), 2) + Math.pow((element.q3 - currentUserVector.q3), 2)
+        + Math.pow((element.q4 - currentUserVector.q4), 2) + Math.pow((element.q5 - currentUserVector.q5), 2) + Math.pow((element.q6 - currentUserVector.q6), 2)
+        + Math.pow((element.q7 - currentUserVector.q7), 2) + Math.pow((element.q8 - currentUserVector.q8), 2) + Math.pow((element.q9 - currentUserVector.q9), 2)
+        + Math.pow((element.q10 - currentUserVector.q10), 2));
 }
