@@ -7,6 +7,7 @@ import {
 	TextField,
 	IconButton,
 	InputAdornment,
+	Link
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -114,6 +115,14 @@ function Login(){
 	<Button type="submit" fullWidth variant="contained" onClick={checkCreds}>
 		Sign In
 	</Button>
+	<br />
+	<Link href="http://localhost:3000/signup" underline="hover">
+  		{'SignUp'}
+	</Link>
+	<br />
+	<Link href="#" underline="hover">
+  		{'Login Vulnerable'}
+	</Link>
 	</Grid>
 </Grid>
 </form>
