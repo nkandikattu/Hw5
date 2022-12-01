@@ -15,10 +15,10 @@ const mysql = require('mysql')
 
 
 const db2 = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'hw5DB'
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.db
 })
 
 app.get('/', (req, res) => {
@@ -214,7 +214,7 @@ app.post("/login", (req, res)=>{
 
 
 app.listen(config.port, () => {
-    console.log('Server running on port ' + config.port);
+    console.log(`Server running on port ${config.port}`);
 });
 
 
