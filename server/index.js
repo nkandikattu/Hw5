@@ -197,7 +197,7 @@ app.post("/login", (req, res)=>{
                        res.json({
                         auth: true,
                         token: token,
-                        result: result
+                        user_id: result[0].id
                        })
                     }
                     else{
