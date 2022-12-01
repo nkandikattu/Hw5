@@ -11,7 +11,7 @@ app.use(cors())
 const jwt = require('jsonwebtoken')
 
 const mysql = require('mysql')
-const mysql = require('mysql');
+
 
 
 const db2 = mysql.createConnection({
