@@ -27,7 +27,30 @@ app.post("/signup", (req, res)=>{
     const lastname = req.body.lastname;
     const emailid = req.body.emailid;
     const password = req.body.password;
+    var q1 = req.body.q1;
+    var q2 = req.body.q2;
+    var q3 = req.body.q3;
+    var q4 = req.body.q4;
+    var q5 = req.body.q5;
+    var q6 = req.body.q6;
+    var q7 = req.body.q7;
+    var q8 = req.body.q8;
+    var q9 = req.body.q9;
+    var q10 = req.body.q10;
+    var modq = Math.sqrt(q1*q1) + (q2+q2) + (q3*q3) + (q4*q4) + (q5*q5) + (q6*q6) + (q7*q7) + (q8*q8) + (q9*q9) + (q10 * q10)
+    q1 = q1/modq;
+    q2 = q2/modq;
+    q3 = q3/modq;
+    q4 = q4/modq;
+    q5 = q5/modq;
+    q6 = q6/modq;
+    q7 = q7/modq;
+    q8 = q8/modq;
+    q9 = q9/modq;
+    q10 = q10/modq;
+
     db.addUser(firstname, lastname, emailid, password);
+    db.addQuizAnswers(emailid, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10);
 })
 const verifyJWT = (req, res, next)=>{
     const token = req.headers["x-access-token"]
