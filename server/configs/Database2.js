@@ -112,6 +112,15 @@ exports.getOtherUsers = async(user_list, current_user_id)=>{
     return users;
 }
 
+function getDateInfo(date_id){
+    let dateQuery = `SELECT User.firstname, User.lastname, User.email
+                    FROM User
+                    WHERE User.id = ${date_id}`;
+    const [users,fields] = db.execute(dateQuery);
+    return dateInfo;
+}
+
 exports.addUser = addUser;
 exports.getUserPassword = getUserPassword;
 exports.addQuizAnswers = addQuizAnswers;
+exports.getDateInfo = getDateInfo;

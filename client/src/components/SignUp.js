@@ -3,13 +3,11 @@ import Axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import { FormLabel, RadioGroup, FormControlLabel, Radio, Button, Avatar, Container, Grid, Paper, Typography, TextField } from '@mui/material';
 
-var config = require('../../../server/configs/Config.js');
-
 function SignUp(){
 
     let navigate = useNavigate();
     useEffect(()=>{
-		Axios.get(`http://localhost:${config.serverPort}/isLoggedIn`, {
+		Axios.get(`http://localhost:8888/isLoggedIn`, {
 			headers:{
 				"x-access-token": localStorage.getItem("token")
 			}
@@ -37,7 +35,7 @@ function SignUp(){
 
 
     const signup = ()=>{
-        Axios.post(`http://localhost:${config.serverPort}/signup`, {
+        Axios.post(`http://localhost:8888/signup`, {
             firstname: firstName,
             lastname: lastName,
             emailid: emailId,

@@ -6,12 +6,11 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
 import Axios from 'axios';
-var config = require('../../../server/configs/Config.js');
 
 export const DateComponent = ({person}) => {
   let navigate = useNavigate();
   useEffect(()=>{
-		Axios.get(`http://localhost:${config.serverPort}/isLoggedIn`, {
+		Axios.get(`http://localhost:8888/isLoggedIn`, {
 			headers:{
 				"x-access-token": localStorage.getItem("token")
 			}
