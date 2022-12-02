@@ -1,0 +1,10 @@
+<?xml version = "1.0" encoding ="utf-8" ?>
+<!-- info_card.dtd  -->
+<!ELEMENT info_card (user+) >
+<!ELEMENT user (name, address, quizResponses) >
+<!ELEMENT name (first, last)>
+<!ELEMENT first (#PCDATA)>
+<!ELEMENT last (#PCDATA)>
+<!ELEMENT address (#PCDATA)>
+<!ELEMENT quizResponses (question+) >
+<!ELEMENT question (#PCDATA)>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE info_card SYSTEM "info_card.dtd" >
+<info_card>
+    <user>
+        <name>
+            <first>Susan</first>
+            <last>Smith</last>
+        </name>
+        <address>susan.smith@gmail.com</address>
+        <quizResponses>
+            <question>Yes</question>
+            <question>No</question>
+            <question>Yes</question>
+            <question>No</question>
+            <question>Yes</question>
+            <question>No</question>
+            <question>Yes</question>
+            <question>No</question>
+            <question>Yes</question>
+            <question>No</question>
+        </quizResponses>
+    </user>
+    <user>
+        <name>
+            <first>James</first>
+            <last>Johnson</last>
+        </name>
+        <address>jamesjohnson@yahoo.com</address>
+        <quizResponses>
+            <question>Yes</question>
+            <question>Yes</question>
+            <question>Yes</question>
+            <question>Yes</question>
+            <question>Yes</question>
+            <question>Yes</question>
+            <question>Yes</question>
+            <question>Yes</question>
+            <question>Yes</question>
+            <question>Yes</question>
+        </quizResponses>
+    </user>
+</info_card>
