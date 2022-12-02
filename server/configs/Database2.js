@@ -1,19 +1,21 @@
+var config = require('./Config.js');
+
 const mysql = require('mysql')
 const mysql2 = require('mysql2/promise')
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'hw5DB',
-    port: 8889
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.db,
+    port: config.dbPort
 })
 const db2 = mysql2.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'hw5DB',
-    port: 8889
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.db,
+    port: config.dbPort
 })
 
 

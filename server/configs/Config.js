@@ -4,6 +4,7 @@ var config = {
     password: 'root',
     db: 'hw5DB',
     dbPort: 8889,
-    port: 8888
+    clientPort: 3000,
+    serverPort: 8888
 }
 module.exports = config;
