@@ -14,10 +14,12 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Axios from 'axios'
 import {useNavigate} from 'react-router-dom';
 
+var config = require('../../../server/configs/Config.js');
+
 
 function Login(){
 	useEffect(()=>{
-		Axios.get("http://localhost:8888/isLoggedIn", {
+		Axios.get(`http://localhost:${config.serverPort}/isLoggedIn`, {
 			headers:{
 				"x-access-token": localStorage.getItem("token")
 			}
@@ -39,7 +41,7 @@ function Login(){
         showPass: false,
     });
     const checkCreds = ()=>{
-        Axios.post("http://localhost:8888/login", {email: email, password: password})
+        Axios.post(`http://localhost:${config.serverPort}/login`, {email: email, password: password})
         .then((response)=>{
             console.log(response.data);
             if(response.data.auth){
