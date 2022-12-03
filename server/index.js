@@ -220,7 +220,7 @@ app.post("/login", (req, res)=>{
 })
 
 
-app.listen(config.port, () => {
+app.listen(config.serverPort, () => {
     console.log(`Server running on port ${config.serverPort}`);
 });
 

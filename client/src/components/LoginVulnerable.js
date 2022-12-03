@@ -16,7 +16,7 @@ import {useNavigate} from 'react-router-dom';
 
 
 
-function Login(){
+function LoginVulnerable(){
 	useEffect(()=>{
 		Axios.get(`http://localhost:8888/isLoggedIn`, {
 			headers:{
@@ -121,8 +121,8 @@ function Login(){
   		{'SignUp'}
 	</Link>
 	<br />
-	<Link href="http://localhost:3000/login-vulnerable" underline="hover">
-  		{'Login Vulnerable'}
+	<Link href="http://localhost:3000/login" underline="hover">
+  		{'Login'}
 	</Link>
 	</Grid>
 </Grid>
@@ -133,4 +133,4 @@ function Login(){
         </div>
     )
 }
-export default Login;
+export default LoginVulnerable;
