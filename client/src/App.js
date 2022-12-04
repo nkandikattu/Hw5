@@ -4,6 +4,7 @@ import { Header } from './components/Header';
 import SignUp from './components/SignUp'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import Login from './components/Login'
+import LoginVulnerable from './components/LoginVulnerable';
 
 const person ={
   "name" : "John Doe"
@@ -29,7 +30,7 @@ function App() {
     return (
       <Router>
         <Routes>
-          <Route path='/login-vulnerable' element={<Login />}></Route>
+          <Route path='/login-vulnerable' element={<LoginVulnerable />}></Route>
           <Route path="*" element={
             <h1>Insecure Request</h1>
           }></Route> 

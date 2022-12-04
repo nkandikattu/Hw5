@@ -10,7 +10,8 @@ const db = mysql.createConnection({
     database: config.db,
     port: config.dbPort
 })
-const db2 = mysql2.createPool({
+
+const db2 = mysql2.createPools({
     host: config.host,
     user: config.user,
     password: config.password,
