@@ -135,7 +135,7 @@ function SignUp(){
                         setq1(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq1(2)
+                        setq1(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
@@ -146,7 +146,7 @@ function SignUp(){
                         setq2(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq2(2)
+                        setq2(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
@@ -157,7 +157,7 @@ function SignUp(){
                         setq3(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq3(2)
+                        setq3(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
@@ -168,7 +168,7 @@ function SignUp(){
                         setq4(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq4(2)
+                        setq4(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
@@ -179,7 +179,7 @@ function SignUp(){
                         setq5(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq5(2)
+                        setq5(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
@@ -190,7 +190,7 @@ function SignUp(){
                         setq6(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq6(2)
+                        setq6(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
@@ -201,7 +201,7 @@ function SignUp(){
                         setq7(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq7(2)
+                        setq7(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
@@ -212,7 +212,7 @@ function SignUp(){
                         setq8(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq8(2)
+                        setq8(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
@@ -223,7 +223,7 @@ function SignUp(){
                         setq9(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq9(2)
+                        setq9(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
@@ -234,7 +234,7 @@ function SignUp(){
                         setq10(1)
                     }}/>
                     <FormControlLabel value="No" control={<Radio />} label="No" onClick={()=>{
-                        setq10(2)
+                        setq10(0)
                     }}/>
                 </RadioGroup>
                 </Grid>
