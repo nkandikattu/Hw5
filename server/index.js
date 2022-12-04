@@ -3,13 +3,16 @@ var config = require('./configs/Config.js');
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const db = require('./configs/Database2')
+const db = require('./configs/Database')
 const router = express.Router();
 app.use(express.json())
 app.use(cors())
 
 const jwt = require('jsonwebtoken')
 
+app.listen(config.serverPort, () => {
+    console.log(`Server running on port ${config.serverPort}`);
+});
 
 app.get('/', (req, res) => {
     res.send("homepage for server")
@@ -19,8 +22,12 @@ app.get('/', (req, res) => {
 app.get("/moreLikeThis", async(req,res)=>{
     current_user_id = req.query.current_user_id;
     matched_user_id = req.query.matched_user_id;
+    console.log("db curr id", current_user_id)
+    console.log("db match id", matched_user_id)
     currentUserVector = await db.getUserVector(current_user_id);
     matchedUserVector = await db.getUserVector(matched_user_id);
+    console.log("vec1", currentUserVector)
+    console.log("vec2", matchedUserVector)
     q=[];
     q.push(currentUserVector.q1 + 0.1*matchedUserVector.q1)
     q.push(currentUserVector.q2 + 0.1*matchedUserVector.q2)
@@ -35,7 +42,8 @@ app.get("/moreLikeThis", async(req,res)=>{
     
     q = normaliseVector(q);
     var updateVector = await db.updateUserVector(current_user_id, q)
-    res.send(updateVector);
+    console.log("updateVector", updateVector)
+    res.send("updated current user's vector")
 
 })
 app.get("/lessLikeThis", async(req,res)=>{
@@ -71,7 +79,7 @@ app.get("/reset", async(req,res)=>{
     //When no matches remain, reset all the matches for the current user. i.e. delete all entries from the matched table/
     current_user_id = req.query.id;
     var delUsers = await db.resetUser(current_user_id);
-    res.send(delUsers);
+    res.send("reset done for current user")
 
 })
 
@@ -82,10 +90,6 @@ app.get("/reset", async(req,res)=>{
     var matchedUsersResult = await db.getMatchedUsers(current_user_id);
     
     otherUsersResult = await db.getOtherUsers(matchedUsersResult,current_user_id); //vectors of potential matches excluding self and already matched users
-    if(otherUsersResult.length <=0)
-    {
-        res.send(matchedUserInfo); //no matches left.
-    }
     currentUserVector = await db.getUserVector(current_user_id);    // get current user's vector
     console.log(currentUserVector)
 
@@ -105,11 +109,13 @@ app.get("/reset", async(req,res)=>{
         matchedUserInfo = await db.getUser(matchedId);
         await db.addUserMatch(current_user_id, matchedId);
     }
-    res.send(matchedUserInfo);
+    //res.send(matchedUserInfo);
+    res.json({"user":matchedUserInfo})
 })
 
 
 app.post("/signup", async(req, res)=>{
+    console.log("in signup")
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
     const emailid = req.body.emailid;
@@ -169,7 +175,7 @@ app.get("/isLoggedIn", verifyJWT, (req, res)=>{
     })
 })
 
-app.post("/login", async(req, res)=>{
+app.post("/login", async (req, res)=>{
     const email = req.body.email;
     const password = req.body.password;
     actualUserDetails = await db.getUserPassword(email);
@@ -182,7 +188,8 @@ app.post("/login", async(req, res)=>{
         res.json({
             auth: true,
             token: token,
-            user_id: actualUserDetails[0].id
+            user_id: actualUserDetails[0].id,
+            name: actualUserDetails[0].firstname
            })
     }
     else{
@@ -192,11 +199,6 @@ app.post("/login", async(req, res)=>{
         })
     }
 })
-
-
-app.listen(config.serverPort, () => {
-    console.log(`Server running on port ${config.serverPort}`);
-});
 
 
 function normaliseVector(q) {

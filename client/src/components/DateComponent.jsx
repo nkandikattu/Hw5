@@ -6,11 +6,15 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
 import Axios from 'axios';
+import config from '../config/Config'
 
 export const DateComponent = ({person}) => {
+  const [user, setUser] = useState([]);
+  
+
   let navigate = useNavigate();
   useEffect(()=>{
-		Axios.get(`http://localhost:8888/isLoggedIn`, {
+		Axios.get(`http://localhost:${config.serverPort}/isLoggedIn`, {
 			headers:{
 				"x-access-token": localStorage.getItem("token")
 			}
@@ -19,22 +23,80 @@ export const DateComponent = ({person}) => {
 			if(!response.data.loggedin){
 				navigate("/login")
 			}
+      else{
+      getUser()
+    }
+
 		})
-	}
+	}, [])
 
-	)
+  async function getUser(){
+    const response = await fetch(`http://localhost:${config.serverPort}/refineDate?id=${localStorage.getItem("user_id")}`);
+    if (!response.ok) {
+      const message = `An error occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
 
+    var user = await response.json();
+
+    console.log("userrrr", user.user)
+    user = user.user
+    if(user===undefined){
+      navigate("/noMatch");
+    }
+    console.log(user, " User ", user.length)
+    setUser(user);
+  }
+  
+  
   const logout = () =>{
     console.log("logout is called")
     localStorage.removeItem("token")
+    localStorage.removeItem("user_id")
     console.log(sessionStorage.getItem("token"), "here is the token")
     navigate("/login")
   }
+
+  const moreLikeThis =async()=>{
+    console.log("more like this clicked")
+    console.log(localStorage.getItem("user_id"))
+    console.log(user[0].id)
+    const response = await fetch(`http://localhost:${config.serverPort}/moreLikeThis?current_user_id=${localStorage.getItem("user_id")}&matched_user_id=${user[0].id}`);
+    if (!response.ok) {
+      const message = `An error occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
+    //var resp = await response.json()
+    console.log("received vector from more like this")
+    getUser();
+  }
+
+  const lessLikeThis =async()=>{
+    console.log("less like this clicked")
+    console.log(localStorage.getItem("user_id"))
+    console.log(user[0].id)
+    const response = await fetch(`http://localhost:${config.serverPort}/lessLikeThis?current_user_id=${localStorage.getItem("user_id")}&matched_user_id=${user[0].id}`);
+    if (!response.ok) {
+      const message = `An error occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
+    //var resp = await response.json()
+    console.log("received vector from less like this")
+    getUser();
+  }
+  
+
   return (
     <Container maxWidth="sm">
-       
+        <div style={{display: 'flex', justifyContent:'flex-end'}}>
         <Button color={"secondary"} variant="contained" onClick={logout}>Sign Out</Button>
-        <p>Name: {person.name}</p>
+        </div>
+        <h3> Welcome {localStorage.getItem('name')}!</h3>
+        <h3> Suggested Date</h3>
+        <p>Name: {user.length>0 ? (user[0].firstname + " " + user[0].lastname) :("no match")} </p>
         <Box
       sx={{
         typography: 'body1',
@@ -43,8 +105,8 @@ export const DateComponent = ({person}) => {
         },
       }}
     >
-      <Link href="#">More Like This</Link>
-      <Link href="#">Less Like This</Link>
+      <Button color={"primary"} variant="contained" onClick={moreLikeThis}>More Like This</Button>
+      <Button color={"primary"} variant="contained"onClick={lessLikeThis}>Less Like This</Button>
       <Link href="#">Set up a Date!</Link>
     </Box>
     </Container>

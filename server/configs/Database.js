@@ -1,40 +1,27 @@
 var config = require('./Config.js');
-
-const mysql = require('mysql')
 const mysql2 = require('mysql2/promise')
 
-const db = mysql.createConnection({
+const db = mysql2.createPool({
     host: config.host,
     user: config.user,
     password: config.password,
     database: config.db,
     port: config.dbPort
 })
-
-const db2 = mysql2.createPools({
-    host: config.host,
-    user: config.user,
-    password: config.password,
-    database: config.db,
-    port: config.dbPort
-})
-
-
-
-
 
 
 exports.addUser = async(firstname, lastname, emailid, password)=>{
-    const sql = `insert into user(firstname, lastname, email, password) values("${firstname}", "${lastname}", "${emailid}", "${password}")`;
-    const [user, fields] = await db2.execute(sql);
+    console.log("in add user")
+    const sql = `insert into User(firstname, lastname, email, password) values("${firstname}", "${lastname}", "${emailid}", "${password}")`;
+    const [user, fields] = await db.execute(sql);
     return user;
 }
 
 exports.addQuizAnswers= async(email, q1, q2, q3,q4, q5, q6, q7, q8, q9, q10)=>{
-    const sql = `insert into quizanswer(user_id, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10)
-    values((select id from user where email="${email}" limit 1), "${q1}", "${q2}", "${q3}", "${q4}", "${q5}",
-    "${q6}", "${q7}", "${q8}", "${q9}", "${q10}")`
-    const [quiz, fields] = await db2.execute(sql);
+    const sql = `insert into QuizAnswer(user_id, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10)
+    values((select id from user where email="${email}" limit 1), ${q1}, ${q2}, ${q3}, ${q4}, ${q5},
+    ${q6}, ${q7}, ${q8}, ${q9}, ${q10})`
+    const [quiz, fields] = await db.execute(sql);
     return quiz
 }
 exports.updateUserVector = async(current_user_id, q)=>{
@@ -42,41 +29,42 @@ exports.updateUserVector = async(current_user_id, q)=>{
     SET q1 = ${q[0]}, q2 = ${q[1]}, q3 = ${q[2]}, q4 = ${q[3]}, q5 = ${q[4]}, q6 = ${q[5]}, q7 = ${q[6]},
     q8 = ${q[7]}, q9 = ${q[8]},q10 = ${q[9]}
     WHERE user_id = ${current_user_id}`;
-    const [users,fields] =  await db2.execute(sql);
+    const [users,fields] =  await db.execute(sql);
+    console.log("in db!", users)
     return users[0];
 }
 exports.resetUser = async(current_user_id) =>{
     var sql = `DELETE FROM UsersViewed WHERE primary_user_id=${current_user_id}`;
-    const [users,fields] =  await db2.execute(sql);
+    const [users,fields] =  await db.execute(sql);
     return users[0];
 }
 
 exports.getUserVector = async(current_user_id) =>{
     var sql = `Select * from QuizAnswer where user_id=${current_user_id}`;
-    const [users,fields] =  await db2.execute(sql);
+    const [users,fields] =  await db.execute(sql);
     return users[0];
 }
 
 exports.getUser= async(current_user_id)=>{
     var sql=`Select * from User where id=${current_user_id}`;
-    const [user,fields] =await db2.execute(sql);
+    const [user,fields] =await db.execute(sql);
     return user;
 }
 
 exports.getMatchedUsers = async(current_user_id, res, next) =>{
     var sql = 'SELECT secondary_user_id FROM UsersViewed WHERE primary_user_id=?'
-    const [users,fields] =  await db2.execute(sql, [current_user_id]) //, (err, res,fields) => {
+    const [users,fields] =  await db.execute(sql, [current_user_id]) //, (err, res,fields) => {
     return users;
 }
 exports.addUserMatch = async(current_user_id, match_user_id)=>{
     var sql = `INSERT INTO UsersViewed(primary_user_id, secondary_user_id) VALUES(${current_user_id},${match_user_id})`;
-    const [users,fields] = await db2.execute(sql)
+    const [users,fields] = await db.execute(sql)
     return users;
 }
 
 exports.getUserPassword = async(email) =>{
-    var sql = `select * from user where email="${email}" limit 1`
-    const [user, fields] = await db2.execute(sql)
+    var sql = `select * from User where email="${email}" limit 1`
+    const [user, fields] = await db.execute(sql)
     return user
 }
 
@@ -94,17 +82,17 @@ exports.getOtherUsers = async(user_list, current_user_id)=>{
     `QuizAnswer.q5, QuizAnswer.q6, QuizAnswer.q7, QuizAnswer.q8, QuizAnswer.q9, QuizAnswer.q10` +
      ` FROM User INNER JOIN QuizAnswer ON User.id=QuizAnswer.user_id AND QuizAnswer.user_id NOT IN (${filterList})`
     
-    const [users,fields] = await db2.execute(queryString) //, (err,res)=>{
+    const [users,fields] = await db.execute(queryString) //, (err,res)=>{
     return users;
 }
 
-function getDateInfo(date_id){
-    let dateQuery = `SELECT User.firstname, User.lastname, User.email
-                    FROM User
-                    WHERE User.id = ${date_id}`;
-    const [users,fields] = db.execute(dateQuery);
-    return dateInfo;
-}
+// function getDateInfo(date_id){
+//     let dateQuery = `SELECT User.firstname, User.lastname, User.email
+//                     FROM User
+//                     WHERE User.id = ${date_id}`;
+//     const [users,fields] = db.execute(dateQuery);
+//     return dateInfo;
+// }
 
 
-exports.getDateInfo = getDateInfo;
+// exports.getDateInfo = getDateInfo;

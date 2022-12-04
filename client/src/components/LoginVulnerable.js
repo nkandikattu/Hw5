@@ -1,4 +1,5 @@
 import React,{ useEffect, useState }  from 'react';
+import config from '../config/Config'
 import {
 	Container,
 	Button,
@@ -18,7 +19,7 @@ import {useNavigate} from 'react-router-dom';
 
 function LoginVulnerable(){
 	useEffect(()=>{
-		Axios.get(`http://localhost:8888/isLoggedIn`, {
+		Axios.get(`http://localhost:${config.serverPort}/isLoggedIn`, {
 			headers:{
 				"x-access-token": localStorage.getItem("token")
 			}
@@ -40,7 +41,7 @@ function LoginVulnerable(){
         showPass: false,
     });
     const checkCreds = ()=>{
-        Axios.post(`http://localhost:8888/login`, {email: email, password: password})
+        Axios.post(`http://localhost:${config.serverPort}/login`, {email: email, password: password})
         .then((response)=>{
             console.log(response.data);
             if(response.data.auth){
@@ -117,11 +118,11 @@ function LoginVulnerable(){
 		Sign In
 	</Button>
 	<br />
-	<Link href="http://localhost:3000/signup" underline="hover">
+	<Link href={`http://localhost:${config.clientPort}/signup`} underline="hover">
   		{'SignUp'}
 	</Link>
 	<br />
-	<Link href="http://localhost:3000/login" underline="hover">
+	<Link href={`http://localhost:${config.clientPort}/login`} underline="hover">
   		{'Login'}
 	</Link>
 	</Grid>

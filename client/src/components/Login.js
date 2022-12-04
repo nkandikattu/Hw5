@@ -1,4 +1,6 @@
 import React,{ useEffect, useState }  from 'react';
+import { Header } from './Header';
+import config from '../config/Config'
 import {
 	Container,
 	Button,
@@ -18,14 +20,14 @@ import {useNavigate} from 'react-router-dom';
 
 function Login(){
 	useEffect(()=>{
-		Axios.get(`http://localhost:8888/isLoggedIn`, {
+		Axios.get(`http://localhost:${config.serverPort}/isLoggedIn`, {
 			headers:{
 				"x-access-token": localStorage.getItem("token")
 			}
 		}).then((response)=>{
 			console.log(response)
 			if(response.data.loggedin){
-				navigate("/")
+				navigate("/refineDate")
 			}
 		})
 	}
@@ -40,12 +42,14 @@ function Login(){
         showPass: false,
     });
     const checkCreds = ()=>{
-        Axios.post(`http://localhost:8888/login`, {email: email, password: password})
+        Axios.post(`http://localhost:${config.serverPort}/login`, {email: email, password: password})
         .then((response)=>{
-            console.log(response.data);
+            console.log(response.data, " in check creds login");
             if(response.data.auth){
 				localStorage.setItem("token", response.data.token)
-				navigate("/")
+				localStorage.setItem("user_id", response.data.user_id)
+				localStorage.setItem("name", response.data.name)
+				navigate("/refineDate")
             }
         })
     }
@@ -61,13 +65,16 @@ function Login(){
     return (
         <div>
             <Container maxWidth="sm">
+			
 <Grid
+	
 	container
 	spacing={2}
 	direction="column"
 	justifyContent="center"
 	style={{ minHeight: "100vh" }}
 >
+<Header  title={"Welcome to SmartDate!"}/>
 <Paper elelvation={2} sx={{ padding: 5 }}>
 <form>
 <Grid container direction="column" spacing={2}>
@@ -117,11 +124,11 @@ function Login(){
 		Sign In
 	</Button>
 	<br />
-	<Link href="http://localhost:3000/signup" underline="hover">
+	<Link href={`http://localhost:${config.clientPort}/signup`} underline="hover">
   		{'SignUp'}
 	</Link>
 	<br />
-	<Link href="http://localhost:3000/login-vulnerable" underline="hover">
+	<Link href={`http://localhost:${config.clientPort}/login-vulnerable`} underline="hover">
   		{'Login Vulnerable'}
 	</Link>
 	</Grid>
