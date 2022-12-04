@@ -9,6 +9,11 @@ const db = mysql2.createPool({
     port: config.dbPort
 })
 
+exports.getTotalUserCount = async()=>{
+    const sql = "select count(*) from User"
+    const [user, fields] = await db.execute(sql);
+    return user[0]['count(*)'];
+}
 
 exports.addUser = async(firstname, lastname, emailid, password)=>{
     console.log("in add user")

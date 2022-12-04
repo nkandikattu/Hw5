@@ -23,12 +23,32 @@ export const DateComponent = ({person}) => {
 				navigate("/login")
 			}
       else{
-      getUser()
+      checkTotalUsers();
+      //getUser()
     }
 
 		})
 	}, [])
 
+  async function checkTotalUsers(){
+    const response = await fetch(`http://localhost:${config.serverPort}/getTotalUserCount`);
+    if (!response.ok) {
+      const message = `An error occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
+    var totalUsers = await response.json();
+    totalUsers = totalUsers.totalUsers
+    console.log("total users", totalUsers)
+    if(totalUsers<=1){
+      const message = `Sorry! Looks like there are very few users. Please try again later. Logging you off`;
+      window.alert(message);
+      logout();
+    }
+    else{
+      getUser()
+    }
+  }
   async function getUser(){
     const response = await fetch(`http://localhost:${config.serverPort}/refineDate?id=${localStorage.getItem("user_id")}`);
     if (!response.ok) {
@@ -53,6 +73,7 @@ export const DateComponent = ({person}) => {
     console.log("logout is called")
     localStorage.removeItem("token")
     localStorage.removeItem("user_id")
+    localStorage.removeItem("name")
     console.log(sessionStorage.getItem("token"), "here is the token")
     navigate("/login")
   }
@@ -105,7 +126,7 @@ export const DateComponent = ({person}) => {
         </div>
         <h1> Welcome {localStorage.getItem('name')}!</h1>
         <h3> Suggested Date</h3>
-        <p>Name: {user.length>0 ? (user[0].firstname + " " + user[0].lastname) :("no match")} </p>
+        <p>Name: {user.length>0 ? (user[0].firstname + " " + user[0].lastname) :("Sorry! There is no match at the moment")} </p>
         <Box
       sx={{
         typography: 'body1',

@@ -18,6 +18,10 @@ app.get('/', (req, res) => {
     res.send("homepage for server")
 });
 
+app.get("/getTotalUserCount", async(req,res)=>{
+    totalCount = await db.getTotalUserCount();
+    res.json({totalUsers:totalCount})
+})
 
 app.get("/moreLikeThis", async(req,res)=>{
     current_user_id = req.query.current_user_id;
