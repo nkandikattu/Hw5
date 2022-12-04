@@ -1,7 +1,6 @@
 import React from 'react'
 import { useEffect, useState }  from 'react';
 import Container from '@mui/material/Container';
-import { Link } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
@@ -87,14 +86,24 @@ export const DateComponent = ({person}) => {
     console.log("received vector from less like this")
     getUser();
   }
-  
+
+  const setUpDate = async()=>{
+    console.log("set up date clicked")
+    navigate("/setUpDate", 
+      { state:
+        { date_firstname: user[0].firstname,
+          date_lastname: user[0].lastname,
+          date_email: user[0].email
+        }
+      });
+  }
 
   return (
     <Container maxWidth="sm">
         <div style={{display: 'flex', justifyContent:'flex-end'}}>
         <Button color={"secondary"} variant="contained" onClick={logout}>Sign Out</Button>
         </div>
-        <h3> Welcome {localStorage.getItem('name')}!</h3>
+        <h1> Welcome {localStorage.getItem('name')}!</h1>
         <h3> Suggested Date</h3>
         <p>Name: {user.length>0 ? (user[0].firstname + " " + user[0].lastname) :("no match")} </p>
         <Box
@@ -107,7 +116,7 @@ export const DateComponent = ({person}) => {
     >
       <Button color={"primary"} variant="contained" onClick={moreLikeThis}>More Like This</Button>
       <Button color={"primary"} variant="contained"onClick={lessLikeThis}>Less Like This</Button>
-      <Link href="#">Set up a Date!</Link>
+      <Button color={"primary"} variant="contained"onClick={setUpDate}>Set Up a Date</Button>
     </Box>
     </Container>
   )

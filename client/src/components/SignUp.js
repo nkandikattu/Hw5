@@ -74,7 +74,7 @@ function SignUp(){
                 <h2>
                     Sign Up
                 </h2>
-                <Typography variant='caption'>Please fill the form to create an account</Typography>
+                <Typography variant='caption'>Please fill out the form to create an account.</Typography>
                 </Grid>
                 <Grid item>
 		            <TextField
@@ -106,8 +106,8 @@ function SignUp(){
 		            <TextField
 			            type="name"
 			            fullWidth
-			            label="Enter your Email Id"
-			            placeholder="Email Id"
+			            label="Enter your Email"
+			            placeholder="Email"
 			            variant="outlined"
 			            required
                         onChange={(e)=>{

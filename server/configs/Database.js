@@ -85,14 +85,3 @@ exports.getOtherUsers = async(user_list, current_user_id)=>{
     const [users,fields] = await db.execute(queryString) //, (err,res)=>{
     return users;
 }
-
-// function getDateInfo(date_id){
-//     let dateQuery = `SELECT User.firstname, User.lastname, User.email
-//                     FROM User
-//                     WHERE User.id = ${date_id}`;
-//     const [users,fields] = db.execute(dateQuery);
-//     return dateInfo;
-// }
-
-
-// exports.getDateInfo = getDateInfo;

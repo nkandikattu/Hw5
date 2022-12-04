@@ -69,12 +69,6 @@ app.get("/lessLikeThis", async(req,res)=>{
 
 })
 
-app.get("/setUpDate", async(req,res)=>{
-    date_id = req.query.date_id;
-    dateInfo = db.getDateInfo(date_id);
-    res.send(dateInfo);
-})
-
 app.get("/reset", async(req,res)=>{
     //When no matches remain, reset all the matches for the current user. i.e. delete all entries from the matched table/
     current_user_id = req.query.id;
