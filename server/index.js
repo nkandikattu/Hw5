@@ -10,16 +10,6 @@ app.use(cors())
 
 const jwt = require('jsonwebtoken')
 
-const mysql = require('mysql')
-
-
-
-const db2 = mysql.createConnection({
-    host: config.host,
-    user: config.user,
-    password: config.password,
-    database: config.db
-})
 
 app.get('/', (req, res) => {
     res.send("homepage for server")
@@ -119,7 +109,7 @@ app.get("/reset", async(req,res)=>{
 })
 
 
-app.post("/signup", (req, res)=>{
+app.post("/signup", async(req, res)=>{
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
     const emailid = req.body.emailid;
@@ -146,8 +136,8 @@ app.post("/signup", (req, res)=>{
     q9 = q9/modq;
     q10 = q10/modq;
 
-    db.addUser(firstname, lastname, emailid, password);
-    db.addQuizAnswers(emailid, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10);
+    await db.addUser(firstname, lastname, emailid, password);
+    await db.addQuizAnswers(emailid, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10);
 })
 const verifyJWT = (req, res, next)=>{
     const token = req.headers["x-access-token"]
@@ -179,44 +169,28 @@ app.get("/isLoggedIn", verifyJWT, (req, res)=>{
     })
 })
 
-app.post("/login", (req, res)=>{
+app.post("/login", async(req, res)=>{
     const email = req.body.email;
     const password = req.body.password;
-    db2.query(
-        "select * from user where email=?",
-        [email],
-        (err, result)=>{
-            console.log(result)
-            if(err){
-                res.json({
-                    auth: false,
-                    message: "error finding user"
-                })
-            }
-            else{
-                if(result.length > 0 ){
-                    if(result[0].password ==  password){
-                        const id = result[0].id
-                        const token = jwt.sign({id}, "jwtSecret", {
-                            expiresIn: 600,
-                        })
-                        
-                       res.json({
-                        auth: true,
-                        token: token,
-                        user_id: result[0].id
-                       })
-                    }
-                    else{
-                        res.json({
-                            auth: false,
-                            message: "no user found"
-                        })
-                    }
-                }
-            }
-        }
-    )
+    actualUserDetails = await db.getUserPassword(email);
+    actualPassword = actualUserDetails[0].password;
+    if(actualPassword == password){
+        const id = actualUserDetails[0].id;
+        const token = jwt.sign({id}, "jwtSecret", {
+            expiresIn: 6000,
+        })
+        res.json({
+            auth: true,
+            token: token,
+            user_id: actualUserDetails[0].id
+           })
+    }
+    else{
+        res.json({
+            auth: false,
+            message: "no user found"
+        })
+    }
 })
 
 

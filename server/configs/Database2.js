@@ -19,43 +19,22 @@ const db2 = mysql2.createPool({
 })
 
 
-function addUser(firstname, lastname, emailid, password){
-    const result = db.query(`
-    INSERT INTO User(firstname, lastname, email, password) VALUES(?,?,?,?)
-    `, [firstname, lastname, emailid, password])
-    return result;
-  }
-
-  function addQuizAnswers(email, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10){
-    const result = db.query(`
-    INSERT INTO QuizAnswer(user_id, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10) 
-    VALUES((SELECT id from User where email=? limit 1),?,?,?,?,?,?,?,?,?,?)
-    `, [email, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10])
-
-    return result;
-  }
 
 
-function getUserPassword(email){
-    var result;
-    db.query(`SELECT * FROM User where email=?;`, [email],(err, res)=>{
-        if(err){
-            console.log(err);
-        }
-        else{
-            if(res.length > 0 ){
-                console.log(res[0], "length is big")
-                if(res[0].password ==  password){
-                    result = "login success";
-                }
-                else{
-                    result = "login failed";
-                }
-            }
-        }
-    })
-    //console.log(result);
-    return result;
+
+
+exports.addUser = async(firstname, lastname, emailid, password)=>{
+    const sql = `insert into user(firstname, lastname, email, password) values("${firstname}", "${lastname}", "${emailid}", "${password}")`;
+    const [user, fields] = await db2.execute(sql);
+    return user;
+}
+
+exports.addQuizAnswers= async(email, q1, q2, q3,q4, q5, q6, q7, q8, q9, q10)=>{
+    const sql = `insert into quizanswer(user_id, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10)
+    values((select id from user where email="${email}" limit 1), "${q1}", "${q2}", "${q3}", "${q4}", "${q5}",
+    "${q6}", "${q7}", "${q8}", "${q9}", "${q10}")`
+    const [quiz, fields] = await db2.execute(sql);
+    return quiz
 }
 exports.updateUserVector = async(current_user_id, q)=>{
     var sql = `UPDATE QuizAnswer
@@ -94,6 +73,12 @@ exports.addUserMatch = async(current_user_id, match_user_id)=>{
     return users;
 }
 
+exports.getUserPassword = async(email) =>{
+    var sql = `select * from user where email="${email}" limit 1`
+    const [user, fields] = await db2.execute(sql)
+    return user
+}
+
 exports.getOtherUsers = async(user_list, current_user_id)=>{
     console.log(user_list);
     console.log(typeof(user_list))
@@ -120,7 +105,5 @@ function getDateInfo(date_id){
     return dateInfo;
 }
 
-exports.addUser = addUser;
-exports.getUserPassword = getUserPassword;
-exports.addQuizAnswers = addQuizAnswers;
+
 exports.getDateInfo = getDateInfo;
