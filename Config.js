@@ -1,0 +1,10 @@
+var config = {
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    db: 'hw5DB',
+    dbPort: 8889,
+    clientPort: 3000,
+    serverPort: 5000
+}
+module.exports = config;

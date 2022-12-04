@@ -9,7 +9,6 @@ import { NoMatch } from './components/NoMatch';
 
 
 function App() {
-  if(window.self === window.top){
     return (
       <Router>
         <Routes>
@@ -18,22 +17,10 @@ function App() {
           <Route path='/login' element={<Login />}></Route>
           <Route path='/refineDate' element={<DateComponent />}></Route>
         <Route path='/noMatch' element={<NoMatch />}></Route>
+        <Route path='/login-vulnerable' element={<LoginVulnerable />}></Route>
       </Routes>
       </Router>
     );
-  }
-  else{
-    return (
-      <Router>
-        <Routes>
-          <Route path='/login-vulnerable' element={<LoginVulnerable />}></Route>
-          <Route path="*" element={
-            <h1>Insecure Request</h1>
-          }></Route> 
-        </Routes>
-      </Router>
-    )
-  }
   
 }
 
