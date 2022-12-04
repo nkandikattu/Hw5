@@ -18,6 +18,6 @@ Login page is secure from click jacking, which means login page cannot be loaded
 Login vulnerable page is insecure from click jacking, which means other websites can load this page using iframe and make user click on the desired buttons with out him knowing.
 
 1. Open the clickjackloginvulnerable.html page to check the insecurity of login vulnerable page.
-(Note): this html page tries to load login vulnerable page using iframe. check html source ocde for further information.
+(Note): this html page tries to load login vulnerable page using iframe. check html source code for further information.
 2. Once opened, the page should be showing the actual login page without reporting user about the possible insecurity.
 3. Click on login option below the submit, which will redirect to secure login page, and shows the insecurity message inside the iframe.
