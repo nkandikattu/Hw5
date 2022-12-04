@@ -124,7 +124,7 @@ app.post("/signup", async(req, res)=>{
     var q8 = req.body.q8;
     var q9 = req.body.q9;
     var q10 = req.body.q10;
-    var modq = Math.sqrt(q1*q1) + (q2+q2) + (q3*q3) + (q4*q4) + (q5*q5) + (q6*q6) + (q7*q7) + (q8*q8) + (q9*q9) + (q10 * q10)
+    var modq = Math.sqrt((q1*q1) + (q2*q2) + (q3*q3) + (q4*q4) + (q5*q5) + (q6*q6) + (q7*q7) + (q8*q8) + (q9*q9) + (q10 * q10))
     q1 = q1/modq;
     q2 = q2/modq;
     q3 = q3/modq;
@@ -196,8 +196,8 @@ app.post("/login", async (req, res)=>{
 
 
 function normaliseVector(q) {
-    var modq = Math.sqrt(q[0] * q[0]) + (q[1] * q[1]) + (q[2] * q[2]) + (q[3] * q[3])
-        + (q[4] * q[4]) + (q[5] * q[5]) + (q[6] * q[6]) + (q[7] * q[7]) + (q[8] * q[8]) + (q[9] * q[9]);
+    var modq = Math.sqrt((q[0] * q[0]) + (q[1] * q[1]) + (q[2] * q[2]) + (q[3] * q[3])
+        + (q[4] * q[4]) + (q[5] * q[5]) + (q[6] * q[6]) + (q[7] * q[7]) + (q[8] * q[8]) + (q[9] * q[9]));
     q[0] = q[0] / modq;
     q[1] = q[1] / modq;
     q[2] = q[2] / modq;
