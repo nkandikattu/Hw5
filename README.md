@@ -6,7 +6,7 @@ Pavan Koushik Kommuri, pavankoushik.kommuri@sjsu.edu
 
 # Note about Config.js
 
-Due to using React for our frontend framework and Express for our backend/server framework, we have two Config.js files: one for the frontend, one for the backend. They are both identical, but in order to change the port the app runs on, both Config files will need to be altered. The frontend Config file can be found at ./client/config/Config.js. The backend Config file can be found at ./server/configs/Config.js. (Note that the client folder is config, the server folder is configs.)
+Due to using React for our frontend framework and Express for our backend/server framework, we have three Config.js files: one for the frontend, one for the backend, and one to test the Click-Jacking attack. They are all identical, but in order to change the port the app runs on, all Config files will need to be altered. The frontend Config file can be found at ./client/config/Config.js. The backend Config file can be found at ./server/configs/Config.js. The click-jacking Config file can be found at ./Config.js. (Note that the client folder is config, the server folder is configs.)
 
 # Testing Click Jacking on Login Pages
 
